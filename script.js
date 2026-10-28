@@ -1,18 +1,17 @@
 /**
- * LÓGICA DE NEGOCIO: SMART CLASSROOM
+ * LÓGICA DE NEGOCIO: SMART CLASSROOM (DISEÑO EDITORIAL)
  */
 
-// --- 1. VARIABLES, TIPOS DE DATOS Y ARREGLOS ---
-const capacidadMaxima = 8; // Aumenté el límite para que puedas probar el botón
+// --- 1. VARIABLES Y ARREGLOS ---
+const capacidadMaxima = 8;
 let alumnosRegistrados = 0; 
 
-// Base de datos inicial
 let baseDeDatosAlumnos = [
     { id: 1, nombre: "Ana Soberanes", presente: false },
     { id: 2, nombre: "Carlos Mendez", presente: false }
 ];
 
-// Arreglos para el generador aleatorio (El Plus)
+// Arrays para el generador aleatorio
 const nombresAleatorios = ["Diego", "Evelyn", "Sofia", "Javier", "Valeria", "Miguel", "Lucia", "Raul", "Andres", "Camila"];
 const apellidosAleatorios = ["Puebla", "Lozano", "Soberanes", "Gomez", "Mendez", "Hernandez", "Martinez", "Lopez", "Garcia"];
 
@@ -21,28 +20,25 @@ const listaHTML = document.getElementById("lista-alumnos");
 const estadisticasHTML = document.getElementById("estadisticas");
 
 
-// --- 2. FUNCIONES (El Plus Generador) ---
+// --- 2. FUNCIONES (El Generador) ---
 function agregarAlumnoAleatorio() {
-    // 3. CONDICIONAL: Verifica si cabe otro alumno antes de generarlo
+    // 3. CONDICIONAL: Verifica aforo
     if (baseDeDatosAlumnos.length < capacidadMaxima) {
         
-        // Uso del objeto Math para escoger un string aleatorio de los arreglos
         const nombreAzar = nombresAleatorios[Math.floor(Math.random() * nombresAleatorios.length)];
         const apellidoAzar = apellidosAleatorios[Math.floor(Math.random() * apellidosAleatorios.length)];
         
-        // Crea el nuevo objeto alumno
         const nuevoAlumno = {
             id: baseDeDatosAlumnos.length + 1,
             nombre: `${nombreAzar} ${apellidoAzar}`,
             presente: false
         };
 
-        // Lo inyecta a la base de datos y actualiza la pantalla
         baseDeDatosAlumnos.push(nuevoAlumno);
         inicializarDashboard();
 
     } else {
-        alert("⚠️ Aforo de lista máximo alcanzado. No puedes registrar más alumnos al curso.");
+        alert("⚠️ Aforo de lista máximo alcanzado. El aula virtual está llena.");
     }
 }
 
@@ -51,22 +47,18 @@ function agregarAlumnoAleatorio() {
 function inicializarDashboard() {
     listaHTML.innerHTML = ""; 
     
-    // Recorre todos los estudiantes e incluye íconos de FontAwesome
     baseDeDatosAlumnos.forEach(function(alumno, index) {
         
         let li = document.createElement("li");
         li.className = "student-item";
         
-        // Contenedor del nombre con ícono de usuario
         let infoDiv = document.createElement("div");
         infoDiv.className = "student-info";
-        infoDiv.innerHTML = `<i class="fa-solid fa-circle-user"></i> ${alumno.nombre}`;
+        infoDiv.innerHTML = `<i class="fa-solid fa-user"></i> ${alumno.nombre}`;
         
-        // Botón de asistencia
         let boton = document.createElement("button");
         boton.className = "btn-asistencia";
         
-        // Si está presente, cambia el texto y pone un ícono de "Check"
         if(alumno.presente) {
             boton.innerHTML = `<i class="fa-solid fa-check"></i> Presente`;
             boton.disabled = true;
@@ -86,27 +78,27 @@ function inicializarDashboard() {
     actualizarEstadisticas();
 }
 
-// Función que maneja la lógica de asistencia
+// Función de asistencia
 function registrarIngreso(indice) {
     if (alumnosRegistrados < capacidadMaxima) {
         baseDeDatosAlumnos[indice].presente = true;
         alumnosRegistrados++;
         inicializarDashboard(); 
     } else {
-        alert("⚠️ AULA LLENA: Ya no hay lugares disponibles en esta sesión de Smart Classroom.");
+        alert("⚠️ AULA LLENA: Ya no hay lugares disponibles en esta sesión.");
     }
 }
 
-// Función para actualizar la ocupación
+// Actualizar estadísticas con colores del nuevo diseño
 function actualizarEstadisticas() {
     estadisticasHTML.innerHTML = `<i class="fa-solid fa-users"></i> Ocupación: ${alumnosRegistrados} / ${capacidadMaxima}`;
     
     if(alumnosRegistrados === capacidadMaxima) {
-        estadisticasHTML.style.color = "#ff453a"; 
+        estadisticasHTML.style.color = "#c0392b"; // Rojo más apagado, estilo editorial
     } else {
-        estadisticasHTML.style.color = "#ffffff"; 
+        estadisticasHTML.style.color = "#111111"; // Negro de la fuente principal
     }
 }
 
-// Inicializamos
+// Inicializar app
 inicializarDashboard();
